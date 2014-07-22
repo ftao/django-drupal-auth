@@ -11,7 +11,7 @@ class DrupalSessionMiddleware(object):
         # AuthenticationMiddleware is required so that request.user exists.
         if not hasattr(request, 'user'):
             raise ImproperlyConfigured(
-                "The Django remote user auth middleware requires the"
+                "The Django drupal user auth middleware requires the"
                 " authentication middleware to be installed.  Edit your"
                 " MIDDLEWARE_CLASSES setting to insert"
                 " 'django.contrib.auth.middleware.AuthenticationMiddleware'"
@@ -50,7 +50,7 @@ class DrupalSessionMiddleware(object):
         '''
         raw_cookie = request.META.get("HTTP_COOKIE",'')
         for item in raw_cookie.split(';'):
-            parts = item.split('=', 1)
+            parts = item.strip().split('=', 1)
             if len(parts) <= 1:
                 continue
             if parts[0].startswith('SESS'):

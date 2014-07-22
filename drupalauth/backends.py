@@ -1,4 +1,6 @@
+import hashlib
 from .models import Sessions, Users
+from django.contrib.auth import get_user_model
 
 class DrupalSessionBackend(object):
     """
@@ -15,7 +17,36 @@ class DrupalSessionBackend(object):
     # Create a User object if not already in the database?
     create_unknown_user = True
 
-    def authenticate(self, sid):
+    def authenticate(self, sid=None, username=None, password=None):
+        if sid is not None:
+            return self._authenticate_by_sid(sid)
+        if username is not None and password is not None:
+            return self._authenticate_by_username_password(username, password)
+
+    def _authenticate_by_username_password(self, username, password):
+        """
+        This method lookup user from drupal ``users`` table
+        return the user if found , return None otherwise 
+        create a django user if not already exists
+        """
+        try:
+            user = Users.objects.get(name=username)
+            if user.pass_field != hashlib.md5(password).hexdigest():
+                return None
+            username = self.clean_username(username)
+            UserModel = get_user_model()
+            if self.create_unknown_user:
+                try:
+                    user = UserModel.objects.get_by_natural_key(username)
+                except UserModel.DoesNotExist:
+                    user = UserModel.objects.create_user(username, user.mail, password)
+            return user
+
+        except Users.DoesNotExist:
+            print 'not such user'
+            return 
+
+    def _authenticate_by_sid(self, sid):
         """
         This method lookup user from drupal ``sessions`` and ``users`` table by `sid`,
         return the user if found, return None otherwise 
@@ -23,6 +54,7 @@ class DrupalSessionBackend(object):
         $user = db_fetch_object(db_query("SELECT u.*, s.* FROM {users} u INNER JOIN {sessions} s ON u.uid = s.uid WHERE s.sid = '%s, $key)
 
         """
+        print 'sid', sid
         if not sid:
             return
 
@@ -49,3 +81,4 @@ class DrupalSessionBackend(object):
         By default, returns the user unmodified.
         """
         return user
+

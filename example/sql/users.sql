@@ -57,4 +57,4 @@ CREATE TABLE IF NOT EXISTS `users` (
 --
 
 INSERT INTO `users` (`uid`, `name`, `pass`, `mail`, `mode`, `sort`, `threshold`, `theme`, `signature`, `signature_format`, `created`, `access`, `login`, `status`, `timezone`, `language`, `picture`, `init`, `data`) VALUES
-(1, 'user1', 'f447b20a7fcbf53a5d5be013ea0b15af', 'test@example.com', 0, 0, 0, '', '', 0, 1270953724, 1300667296, 1300584438, 1, NULL, 'zh-hans', '', 'test@example.com', '');
+(1, 'user1', 'e10adc3949ba59abbe56e057f20f883e', 'test@example.com', 0, 0, 0, '', '', 0, 1270953724, 1300667296, 1300584438, 1, NULL, 'zh-hans', '', 'test@example.com', '');

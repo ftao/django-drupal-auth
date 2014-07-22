@@ -16,6 +16,7 @@ def home(request):
        document.cookie = 'SESSanything=0cpm8ujaehqptpp2tikm4g07s3;expires=Thu, 01 Jan 1970 00:00:00 GMT';
        window.location.reload();
     }
+    
     </script>
     </head>
     <body>
@@ -33,3 +34,4 @@ def home(request):
     if request.user.is_authenticated():
         info['username'] = request.user.get_username()
     return HttpResponse(template % json.dumps(info, indent=2))
+
