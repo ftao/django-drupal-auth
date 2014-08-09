@@ -1,8 +1,9 @@
 import hashlib
 from .models import Sessions, Users
 from django.contrib.auth import get_user_model
+from django.contrib.auth.backends import ModelBackend
 
-class DrupalSessionBackend(object):
+class DrupalSessionBackend(ModelBackend):
     """
     This backend is to be used in conjunction with the ``DrupalSessionMiddleware``
     found in the middleware module of this package, and is used when the server
@@ -54,7 +55,6 @@ class DrupalSessionBackend(object):
         $user = db_fetch_object(db_query("SELECT u.*, s.* FROM {users} u INNER JOIN {sessions} s ON u.uid = s.uid WHERE s.sid = '%s, $key)
 
         """
-        print 'sid', sid
         if not sid:
             return
 
@@ -81,4 +81,5 @@ class DrupalSessionBackend(object):
         By default, returns the user unmodified.
         """
         return user
+
 
